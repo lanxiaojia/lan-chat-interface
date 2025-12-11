@@ -23,6 +23,12 @@ export interface ChatInterfaceProps {
   className?: string;
   initialHistory?: Message[]; // 支持传入历史记录
   bodyBuilder?: BodyBuilderFn; // 自定义请求体构建函数
+  userAvatar?: string; // 用户头像 URL
+  aiAvatar?: string; // AI 头像 URL
+  userName?: string; // 用户名称
+  aiName?: string; // AI 名称
+  disabled?: boolean; // 全局禁用输入
+  placeholder?: string; // 输入框占位符
 }
 
 // 消息输入属性
@@ -31,6 +37,8 @@ export interface MessageInputProps {
   setInputValue: (value: string) => void;
   onSend: () => void; // 简化为 onSend 回调
   isTyping: boolean;
+  disabled?: boolean;
+  placeholder?: string;
 }
 
 // 扩展的消息输入属性（包含停止功能）
@@ -46,6 +54,10 @@ export interface ChatMessageProps {
   containerHeight?: number;
   isAutoScroll?: boolean;
   onUpdate?: () => void;
+  userAvatar?: string;
+  aiAvatar?: string;
+  userName?: string;
+  aiName?: string;
 }
 
 // 流式Markdown属性

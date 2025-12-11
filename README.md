@@ -128,6 +128,68 @@ const App: React.FC = () => {
 export default App;
 ```
 
+### 使用自定义头像、名称和占位符
+
+```tsx
+import React from "react";
+import { ChatInterface } from "lan-chat-interface";
+import "lan-chat-interface/styles.css";
+
+const App: React.FC = () => {
+  return (
+    <div className="h-screen w-full">
+      <ChatInterface
+        apiRoute="https://your-sse-endpoint.com/chat"
+        method="POST"
+        title="我的专属 AI 助手"
+        initialMessage="你好，我是你的专属 AI 助手，有什么可以帮你？"
+        userAvatar="https://example.com/user-avatar.png"
+        aiAvatar="https://example.com/ai-avatar.png"
+        userName="用户"
+        aiName="AI 助手"
+        placeholder="请输入您的问题..."
+      />
+    </div>
+  );
+};
+
+export default App;
+```
+
+### 使用禁用状态
+
+```tsx
+import React, { useState } from "react";
+import { ChatInterface } from "lan-chat-interface";
+import "lan-chat-interface/styles.css";
+
+const App: React.FC = () => {
+  const [isDisabled, setIsDisabled] = useState(false);
+
+  return (
+    <div className="h-screen w-full">
+      <div className="p-4 bg-gray-100">
+        <button
+          onClick={() => setIsDisabled(!isDisabled)}
+          className="px-4 py-2 bg-blue-500 text-white rounded"
+        >
+          {isDisabled ? "启用输入" : "禁用输入"}
+        </button>
+      </div>
+      <ChatInterface
+        apiRoute="https://your-sse-endpoint.com/chat"
+        method="POST"
+        title="AI 聊天助手"
+        initialMessage="你好，我是 AI 助手，有什么可以帮你？"
+        disabled={isDisabled}
+      />
+    </div>
+  );
+};
+
+export default App;
+```
+
 ## 组件说明
 
 ### ChatInterface
@@ -136,15 +198,21 @@ export default App;
 
 #### 属性
 
-| 属性名           | 类型              | 描述                         |
-| ---------------- | ----------------- | ---------------------------- |
-| `apiRoute`       | `string`          | SSE 服务器接口地址           |
-| `method`         | `"GET" \| "POST"` | 请求方法（默认：GET）        |
-| `initialMessage` | `string`          | 初始欢迎消息（可选）         |
-| `title`          | `string`          | 聊天窗口标题（可选）         |
-| `className`      | `string`          | 自定义样式类名（可选）       |
-| `initialHistory` | `Message[]`       | 初始历史消息记录（可选）     |
-| `bodyBuilder`    | `BodyBuilderFn`   | 自定义请求体构建函数（可选） |
+| 属性名           | 类型              | 描述                                      |
+| ---------------- | ----------------- | ----------------------------------------- |
+| `apiRoute`       | `string`          | SSE 服务器接口地址                        |
+| `method`         | `"GET" \| "POST"` | 请求方法（默认：GET）                     |
+| `initialMessage` | `string`          | 初始欢迎消息（可选）                      |
+| `title`          | `string`          | 聊天窗口标题（可选）                      |
+| `className`      | `string`          | 自定义样式类名（可选）                    |
+| `initialHistory` | `Message[]`       | 初始历史消息记录（可选）                  |
+| `bodyBuilder`    | `BodyBuilderFn`   | 自定义请求体构建函数（可选）              |
+| `userAvatar`     | `string`          | 用户头像 URL（可选）                      |
+| `aiAvatar`       | `string`          | AI 头像 URL（可选）                       |
+| `userName`       | `string`          | 用户名称（可选，默认："You"）             |
+| `aiName`         | `string`          | AI 名称（可选，默认："AI Assistant"）     |
+| `disabled`       | `boolean`         | 全局禁用输入（可选，默认：false）         |
+| `placeholder`    | `string`          | 输入框占位符（可选，默认："输入消息..."） |
 
 ### Message
 
@@ -152,9 +220,13 @@ export default App;
 
 #### 属性
 
-| 属性名    | 类型      | 描述     |
-| --------- | --------- | -------- |
-| `message` | `Message` | 消息对象 |
+| 属性名       | 类型      | 描述                                  |
+| ------------ | --------- | ------------------------------------- |
+| `message`    | `Message` | 消息对象                              |
+| `userAvatar` | `string`  | 用户头像 URL（可选）                  |
+| `aiAvatar`   | `string`  | AI 头像 URL（可选）                   |
+| `userName`   | `string`  | 用户名称（可选，默认："You"）         |
+| `aiName`     | `string`  | AI 名称（可选，默认："AI Assistant"） |
 
 ### CodeBlock
 
@@ -173,13 +245,14 @@ export default App;
 
 #### 属性
 
-| 属性名        | 类型                                                  | 描述               |
-| ------------- | ----------------------------------------------------- | ------------------ |
-| `value`       | `string`                                              | 输入框内容         |
-| `onChange`    | `(e: React.ChangeEvent<HTMLTextAreaElement>) => void` | 内容变化回调       |
-| `onSend`      | `() => void`                                          | 发送按钮点击回调   |
-| `isLoading`   | `boolean`                                             | 是否加载中（可选） |
-| `placeholder` | `string`                                              | 占位符（可选）     |
+| 属性名        | 类型                                                  | 描述                                |
+| ------------- | ----------------------------------------------------- | ----------------------------------- |
+| `value`       | `string`                                              | 输入框内容                          |
+| `onChange`    | `(e: React.ChangeEvent<HTMLTextAreaElement>) => void` | 内容变化回调                        |
+| `onSend`      | `() => void`                                          | 发送按钮点击回调                    |
+| `isLoading`   | `boolean`                                             | 是否加载中（可选）                  |
+| `disabled`    | `boolean`                                             | 是否禁用输入（可选，默认：false）   |
+| `placeholder` | `string`                                              | 占位符（可选，默认："输入消息..."） |
 
 ### Markdown
 

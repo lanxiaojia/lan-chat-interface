@@ -22,6 +22,10 @@ const ChatMessage = memo(
     isLast,
     containerHeight = 0,
     onUpdate,
+    userAvatar,
+    aiAvatar,
+    userName = "You",
+    aiName = "AI Assistant",
   }: ChatMessageProps) => {
     const isUser = message.role === "user";
     const { isCopied, copyToClipboard } = useCopyToClipboard();
@@ -132,14 +136,32 @@ const ChatMessage = memo(
         {/* 头像区域 */}
         <div className="lan-flex-shrink-0 lan-mt-1">
           {isUser ? (
-            <div className="lan-w-8 lan-h-8 lan-rounded-full lan-bg-gray-200 lan-flex lan-items-center lan-justify-center lan-text-gray-600">
-              <User size={18} />
-            </div>
+            // 🟢 用户头像逻辑
+            userAvatar ? (
+              <img
+                src={userAvatar}
+                alt={userName}
+                className="lan-w-8 lan-h-8 lan-rounded-full lan-object-cover"
+              />
+            ) : (
+              <div className="lan-w-8 lan-h-8 lan-rounded-full lan-bg-gray-200 lan-flex lan-items-center lan-justify-center lan-text-gray-600">
+                <User size={18} />
+              </div>
+            )
+          ) : // 🟢 AI 头像逻辑
+          aiAvatar ? (
+            <img
+              src={aiAvatar}
+              alt={aiName}
+              className={`lan-w-8 lan-h-8 lan-rounded-full lan-object-cover ${
+                isLoading ? "lan-animate-pulse" : ""
+              }`}
+            />
           ) : (
             <div
               className={`lan-w-8 lan-h-8 lan-rounded-full lan-flex lan-items-center lan-justify-center 
-              ${isLoading ? "lan-text-blue-500" : "lan-text-blue-600"}
-            `}
+                ${isLoading ? "lan-text-blue-500" : "lan-text-blue-600"}
+              `}
             >
               {isLoading ? (
                 <span className="lan-relative lan-flex lan-h-5 lan-w-5">
@@ -161,7 +183,7 @@ const ChatMessage = memo(
         >
           {/* 用户名 */}
           <div className="lan-mb-1 lan-text-xs lan-text-gray-400 lan-px-1">
-            {isUser ? "You" : "AI Assistant"}
+            {isUser ? userName : aiName}
           </div>
 
           {/* 气泡主体 */}
@@ -232,7 +254,11 @@ const ChatMessage = memo(
       prev.message.content === next.message.content &&
       prev.isLoading === next.isLoading &&
       prev.isLast === next.isLast &&
-      prev.containerHeight === next.containerHeight
+      prev.containerHeight === next.containerHeight &&
+      prev.userAvatar === next.userAvatar &&
+      prev.aiAvatar === next.aiAvatar &&
+      prev.userName === next.userName &&
+      prev.aiName === next.aiName
     );
   }
 );

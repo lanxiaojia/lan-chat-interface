@@ -1,13 +1,18 @@
 import { defineConfig } from "tsup";
 
 export default defineConfig({
-  entry: ["src/index.ts"],
-  format: ["cjs", "esm"], // 同时输出 CommonJS 和 ES Module
-  dts: true, // 生成 .d.ts 类型声明文件
+  // 🟢 1. 修改入口：改为数组，显式包含 types.ts
+  entry: ["src/index.ts", "src/types.ts"],
+
+  format: ["cjs", "esm"],
+  dts: true,
   splitting: false,
   sourcemap: true,
   clean: true,
-  external: ["react", "react-dom"], // 不要把 React 打包进去
+  external: ["react", "react-dom"],
+
+  // 🟢 2. Banner 配置：虽然 types.js 也会带上 use client，但因为它是纯类型文件，
+  // 编译出的 JS 基本是空的，所以带上也不影响使用，这样配置最简单。
   banner: {
     js: '"use client";',
   },

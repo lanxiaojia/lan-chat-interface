@@ -68,6 +68,12 @@ export default function ChatInterface({
   className = "",
   initialHistory = [],
   bodyBuilder,
+  userAvatar,
+  aiAvatar,
+  userName,
+  aiName,
+  disabled = false,
+  placeholder,
 }: ChatInterfaceProps) {
   const [inputValue, setInputValue] = useState("");
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -164,7 +170,7 @@ export default function ChatInterface({
    * 发送消息处理
    * -------------------------------------------------------- */
   const handleSendMessage = async () => {
-    if (!inputValue.trim() || isTyping) return;
+    if (!inputValue.trim() || isTyping || disabled) return;
 
     const msgContent = inputValue.trim();
     setInputValue("");
@@ -234,9 +240,17 @@ export default function ChatInterface({
       >
         {messages.length === 0 ? (
           <div className="lan-h-full lan-flex lan-flex-col lan-items-center lan-justify-center lan-select-none lan-pb-20">
-            <div className="lan-w-16 lan-h-16 lan-bg-blue-50 lan-rounded-2xl lan-flex lan-items-center lan-justify-center lan-mb-6 lan-shadow-sm">
-              <Sparkles size={32} className="lan-text-blue-500" />
-            </div>
+            {aiAvatar ? (
+              <img
+                src={aiAvatar}
+                alt="AI"
+                className="lan-w-16 lan-h-16 lan-rounded-2xl lan-mb-6 lan-shadow-sm lan-object-cover"
+              />
+            ) : (
+              <div className="lan-w-16 lan-h-16 lan-bg-blue-50 lan-rounded-2xl lan-flex lan-items-center lan-justify-center lan-mb-6 lan-shadow-sm">
+                <Sparkles size={32} className="lan-text-blue-500" />
+              </div>
+            )}
 
             <p className="lan-text-gray-500 lan-text-sm lan-max-w-xs lan-text-center lan-leading-relaxed">
               {initialMessage}
@@ -251,6 +265,10 @@ export default function ChatInterface({
               isLast={index === messages.length - 1}
               containerHeight={containerHeight}
               isAutoScroll={autoScroll}
+              userAvatar={userAvatar}
+              aiAvatar={aiAvatar}
+              userName={userName}
+              aiName={aiName}
               onUpdate={() => {
                 if (!autoScrollRef.current) return;
                 const container = scrollContainerRef.current;
@@ -281,6 +299,8 @@ export default function ChatInterface({
           onSend={handleSendMessage}
           isTyping={isTyping}
           onStop={stop}
+          disabled={disabled}
+          placeholder={placeholder}
         />
       </div>
     </div>
