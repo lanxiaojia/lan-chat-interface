@@ -67,6 +67,7 @@ export default function ChatInterface({
   title,
   className = "",
   initialHistory = [],
+  bodyBuilder,
 }: ChatInterfaceProps) {
   const [inputValue, setInputValue] = useState("");
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -87,6 +88,7 @@ export default function ChatInterface({
     apiRoute,
     {
       method,
+      bodyBuilder,
     }
   );
 

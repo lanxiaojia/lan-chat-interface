@@ -90,6 +90,44 @@ const App: React.FC = () => {
 export default App;
 ```
 
+### 使用自定义请求体构建函数
+
+```tsx
+import React from "react";
+import { ChatInterface } from "lan-chat-interface";
+import "lan-chat-interface/styles.css";
+import { BodyBuilderFn } from "lan-chat-interface/types";
+
+const App: React.FC = () => {
+  // 自定义请求体构建函数
+  const customBodyBuilder: BodyBuilderFn = (payload) => {
+    return {
+      prompt: payload.currentMessage,
+      conversation_history: payload.history.map((msg) => ({
+        role: msg.role,
+        content: msg.content,
+      })),
+      temperature: 0.7,
+      max_tokens: 500,
+    };
+  };
+
+  return (
+    <div className="h-screen w-full">
+      <ChatInterface
+        apiRoute="https://your-sse-endpoint.com/chat"
+        method="POST"
+        title="AI 聊天助手"
+        initialMessage="你好，我是 AI 助手，有什么可以帮你？"
+        bodyBuilder={customBodyBuilder}
+      />
+    </div>
+  );
+};
+
+export default App;
+```
+
 ## 组件说明
 
 ### ChatInterface
@@ -98,14 +136,15 @@ export default App;
 
 #### 属性
 
-| 属性名           | 类型              | 描述                     |
-| ---------------- | ----------------- | ------------------------ |
-| `apiRoute`       | `string`          | SSE 服务器接口地址       |
-| `method`         | `"GET" \| "POST"` | 请求方法（默认：GET）    |
-| `initialMessage` | `string`          | 初始欢迎消息（可选）     |
-| `title`          | `string`          | 聊天窗口标题（可选）     |
-| `className`      | `string`          | 自定义样式类名（可选）   |
-| `initialHistory` | `Message[]`       | 初始历史消息记录（可选） |
+| 属性名           | 类型              | 描述                         |
+| ---------------- | ----------------- | ---------------------------- |
+| `apiRoute`       | `string`          | SSE 服务器接口地址           |
+| `method`         | `"GET" \| "POST"` | 请求方法（默认：GET）        |
+| `initialMessage` | `string`          | 初始欢迎消息（可选）         |
+| `title`          | `string`          | 聊天窗口标题（可选）         |
+| `className`      | `string`          | 自定义样式类名（可选）       |
+| `initialHistory` | `Message[]`       | 初始历史消息记录（可选）     |
+| `bodyBuilder`    | `BodyBuilderFn`   | 自定义请求体构建函数（可选） |
 
 ### Message
 
@@ -210,6 +249,17 @@ interface Message {
   content: string;
   [key: string]: any;
 }
+```
+
+### BodyBuilderFn
+
+```typescript
+type BodyBuilderFn = (payload: {
+  // 当前用户的消息内容
+  currentMessage: string;
+  // 历史消息（包含id）
+  history: Message[];
+}) => any;
 ```
 
 ## 许可证

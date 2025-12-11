@@ -3,12 +3,7 @@ import {
   fetchEventSource,
 } from "@microsoft/fetch-event-source";
 import { useCallback, useEffect, useRef, useState } from "react";
-
-export interface Message {
-  id: string;
-  role: "user" | "assistant";
-  content: string;
-}
+import { BodyBuilderFn, Message } from "../types";
 
 export type ChatStatus = "idle" | "sending" | "streaming" | "error";
 
@@ -18,11 +13,7 @@ class FatalError extends Error {}
 interface ChatOptions {
   method?: "GET" | "POST";
   headers?: Record<string, string>;
-  bodyBuilder?: (payload: {
-    currentMessage: string;
-    history: Omit<Message, "id">[];
-  }) => any;
-  // 🟢 优化 1: 移除了 onUserMessageAdded 回调
+  bodyBuilder?: BodyBuilderFn;
 }
 
 export const useChatSSE = (apiRoute: string, options: ChatOptions = {}) => {
@@ -98,6 +89,7 @@ export const useChatSSE = (apiRoute: string, options: ChatOptions = {}) => {
       const history = messagesRef.current.map((m) => ({
         role: m.role,
         content: m.content,
+        id: m.id,
       }));
 
       const body =

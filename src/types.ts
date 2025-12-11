@@ -6,6 +6,14 @@ export interface Message {
   [key: string]: any;
 }
 
+// 定义 BodyBuilder 函数类型 (更新)
+export type BodyBuilderFn = (payload: {
+  // 当前用户的消息内容
+  currentMessage: string;
+  // 历史消息（包含id）
+  history: Message[];
+}) => any;
+
 // 聊天界面属性
 export interface ChatInterfaceProps {
   apiRoute: string;
@@ -14,6 +22,7 @@ export interface ChatInterfaceProps {
   title?: string;
   className?: string;
   initialHistory?: Message[]; // 支持传入历史记录
+  bodyBuilder?: BodyBuilderFn; // 自定义请求体构建函数
 }
 
 // 消息输入属性
