@@ -57,6 +57,7 @@ export default App;
 ```tsx
 import React from "react";
 import { ChatInterface } from "lan-chat-interface";
+import "lan-chat-interface/styles.css";
 import { Message } from "lan-chat-interface/types";
 
 const App: React.FC = () => {

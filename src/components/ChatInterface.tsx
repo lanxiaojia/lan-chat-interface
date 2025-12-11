@@ -1,8 +1,5 @@
 "use client";
 
-// 自动导入样式
-import "../styles.css";
-
 import { useChatSSE } from "@/hooks/useChatSSE";
 import { ArrowDown, Sparkles } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
