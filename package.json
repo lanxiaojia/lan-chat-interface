@@ -1,0 +1,60 @@
+{
+  "name": "lan-chat-interface",
+  "version": "1.0.0",
+  "description": "A React chat interface component library",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "sideEffects": [
+    "*.css"
+  ],
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup && npm run build:css",
+    "build:css": "npx tailwindcss -i ./src/styles.css -o ./dist/styles.css --minify",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "react": ">=16.8",
+    "react-dom": ">=16.8"
+  },
+  "keywords": [
+    "react",
+    "chat",
+    "ai",
+    "interface",
+    "component",
+    "markdown",
+    "streaming"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@microsoft/fetch-event-source": "^2.0.1",
+    "clsx": "^2.1.1",
+    "katex": "^0.16.27",
+    "lucide-react": "^0.559.0",
+    "react-markdown": "^10.1.0",
+    "react-syntax-highlighter": "^16.1.0",
+    "rehype-katex": "^7.0.1",
+    "remark-breaks": "^4.0.0",
+    "remark-gfm": "^4.0.1",
+    "remark-math": "^6.0.0",
+    "tailwind-merge": "^3.4.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.19",
+    "@types/react-syntax-highlighter": "^15.5.13",
+    "tsup": "^8.5.1"
+  }
+}
