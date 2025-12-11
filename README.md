@@ -35,6 +35,7 @@ npm install lan-chat-interface
 ```tsx
 import React from "react";
 import { ChatInterface } from "lan-chat-interface";
+import "lan-chat-interface/styles.css";
 
 const App: React.FC = () => {
   return (
