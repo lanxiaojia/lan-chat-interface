@@ -16,6 +16,7 @@ const CodeBlock: FC<CodeBlockProps> = memo(({ language, value }) => {
 
   return (
     <div className="lan-relative lan-w-full lan-font-sans codeblock lan-bg-[#1e1e1e] lan-rounded-lg lan-my-4 lan-overflow-hidden lan-border lan-border-gray-800">
+      {/* 顶部栏 */}
       <div className="lan-flex lan-items-center lan-justify-between lan-w-full lan-px-4 lan-py-2 lan-bg-[#2d2d2d] lan-text-gray-200">
         <span className="lan-text-xs lan-lowercase lan-text-gray-400 lan-font-mono">
           {language || "code"}
@@ -31,28 +32,30 @@ const CodeBlock: FC<CodeBlockProps> = memo(({ language, value }) => {
           </button>
         </div>
       </div>
-      <SyntaxHighlighter
-        language={language}
-        style={vscDarkPlus}
-        PreTag="div"
-        showLineNumbers
-        customStyle={{
-          margin: 0,
-          width: "100%",
-          background: "transparent",
-          padding: "1rem",
-          fontSize: "0.875rem",
-          lineHeight: "1.5",
-          overflowX: "auto", // 🟢 Fix: 显式开启横向滚动
-        }}
-        codeTagProps={{
-          style: {
-            fontFamily: "var(--font-mono), monospace", // 确保等宽字体
-          },
-        }}
-      >
-        {value}
-      </SyntaxHighlighter>
+
+      {/* 🟢 2. 滚动容器：显式控制滚动，确保宽度不超过父级 */}
+      <div className="lan-w-full lan-overflow-x-auto">
+        <SyntaxHighlighter
+          language={language}
+          style={vscDarkPlus}
+          PreTag="div"
+          showLineNumbers
+          customStyle={{
+            margin: 0,
+            background: "transparent",
+            padding: "1rem",
+            fontSize: "0.875rem",
+            lineHeight: "1.5",
+          }}
+          codeTagProps={{
+            style: {
+              fontFamily: "var(--font-mono), monospace", // 确保等宽字体
+            },
+          }}
+        >
+          {value}
+        </SyntaxHighlighter>
+      </div>
     </div>
   );
 });

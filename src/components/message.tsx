@@ -188,7 +188,7 @@ const ChatMessage = memo(
 
           {/* 气泡主体 */}
           <div
-            className={`lan-prose-container lan-relative lan-px-5 lan-py-3.5 lan-text-[15px] lan-leading-7 lan-transition-all lan-duration-300
+            className={`lan-prose-container lan-relative lan-px-5 lan-py-3.5 lan-text-[15px] lan-leading-7 lan-transition-all lan-duration-300 lan-max-w-full
                 ${
                   isUser
                     ? "lan-bg-[#e7f0fe] lan-text-gray-900 lan-rounded-[20px] lan-rounded-tr-sm"
