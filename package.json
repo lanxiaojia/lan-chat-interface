@@ -1,6 +1,6 @@
 {
   "name": "lan-chat-interface",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A React chat interface component library",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
