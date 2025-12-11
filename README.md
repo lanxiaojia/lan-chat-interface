@@ -18,8 +18,9 @@
 - **TypeScript** - 类型安全的 JavaScript
 - **Tailwind CSS** - 实用优先的 CSS 框架
 - **tsup** - TypeScript 构建工具
-- **marked** - Markdown 解析器
-- **highlight.js** - 代码高亮库
+- **react-markdown** - Markdown 解析器
+- **react-syntax-highlighter** - 代码高亮库
+- **Server-Sent Events (SSE)** - 实时消息推送
 
 ## 安装
 
@@ -29,44 +30,20 @@ npm install lan-chat-interface
 
 ## 使用示例
 
-### 基本聊天界面
+### 基本聊天界面（带 SSE 支持）
 
 ```tsx
 import React from "react";
 import { ChatInterface } from "lan-chat-interface";
-import { Message } from "lan-chat-interface/types";
 
 const App: React.FC = () => {
-  const [messages, setMessages] = React.useState<Message[]>([]);
-
-  const handleSendMessage = (text: string) => {
-    // 发送消息逻辑
-    const newMessage: Message = {
-      id: Date.now().toString(),
-      content: text,
-      isUser: true,
-      timestamp: new Date(),
-    };
-    setMessages([...messages, newMessage]);
-
-    // 模拟 AI 回复
-    setTimeout(() => {
-      const aiMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        content: `你发送了: ${text}`,
-        isUser: false,
-        timestamp: new Date(),
-      };
-      setMessages([...messages, newMessage, aiMessage]);
-    }, 1000);
-  };
-
   return (
     <div className="h-screen w-full">
       <ChatInterface
-        messages={messages}
-        onSendMessage={handleSendMessage}
-        placeholder="输入消息..."
+        apiRoute="https://your-sse-endpoint.com/chat"
+        method="POST"
+        title="AI 聊天助手"
+        initialMessage="你好，我是 AI 助手，有什么可以帮你？"
       />
     </div>
   );
@@ -75,26 +52,34 @@ const App: React.FC = () => {
 export default App;
 ```
 
-### 使用 SSE 实时聊天
+### 带历史记录的聊天界面
 
 ```tsx
 import React from "react";
 import { ChatInterface } from "lan-chat-interface";
-import { useChatSSE } from "lan-chat-interface/hooks/useChatSSE";
+import { Message } from "lan-chat-interface/types";
 
 const App: React.FC = () => {
-  const { messages, inputValue, setInputValue, isLoading, handleSendMessage } =
-    useChatSSE("https://your-sse-endpoint.com/chat");
+  // 历史消息记录
+  const initialHistory: Message[] = [
+    {
+      id: "1",
+      role: "user",
+      content: "你好，介绍一下自己",
+    },
+    {
+      id: "2",
+      role: "assistant",
+      content: "你好！我是一个基于人工智能的聊天助手，很高兴为您服务。",
+    },
+  ];
 
   return (
     <div className="h-screen w-full">
       <ChatInterface
-        messages={messages}
-        onSendMessage={handleSendMessage}
-        inputValue={inputValue}
-        setInputValue={setInputValue}
-        isLoading={isLoading}
-        placeholder="输入消息..."
+        apiRoute="https://your-sse-endpoint.com/chat"
+        title="AI 聊天助手"
+        initialHistory={initialHistory}
       />
     </div>
   );
@@ -107,18 +92,18 @@ export default App;
 
 ### ChatInterface
 
-主聊天界面组件，包含消息列表和输入区域。
+主聊天界面组件，包含消息列表和输入区域，内部集成了 SSE 实时通信功能。
 
 #### 属性
 
-| 属性名          | 类型                      | 描述                   |
-| --------------- | ------------------------- | ---------------------- |
-| `messages`      | `Message[]`               | 消息列表               |
-| `onSendMessage` | `(text: string) => void`  | 发送消息回调           |
-| `inputValue`    | `string`                  | 输入框内容（可选）     |
-| `setInputValue` | `(value: string) => void` | 设置输入框内容（可选） |
-| `isLoading`     | `boolean`                 | 是否加载中（可选）     |
-| `placeholder`   | `string`                  | 输入框占位符（可选）   |
+| 属性名           | 类型              | 描述                     |
+| ---------------- | ----------------- | ------------------------ |
+| `apiRoute`       | `string`          | SSE 服务器接口地址       |
+| `method`         | `"GET" \| "POST"` | 请求方法（默认：GET）    |
+| `initialMessage` | `string`          | 初始欢迎消息（可选）     |
+| `title`          | `string`          | 聊天窗口标题（可选）     |
+| `className`      | `string`          | 自定义样式类名（可选）   |
+| `initialHistory` | `Message[]`       | 初始历史消息记录（可选） |
 
 ### Message
 
@@ -169,23 +154,11 @@ Markdown 渲染组件。
 
 ### useChatSSE
 
-用于处理 Server-Sent Events 实时聊天的 Hook。
+用于处理 Server-Sent Events 实时聊天的 Hook（内部使用）。
 
-#### 参数
+#### 说明
 
-| 参数名   | 类型     | 描述           |
-| -------- | -------- | -------------- |
-| `sseUrl` | `string` | SSE 服务器 URL |
-
-#### 返回值
-
-| 返回值              | 类型                      | 描述           |
-| ------------------- | ------------------------- | -------------- |
-| `messages`          | `Message[]`               | 消息列表       |
-| `inputValue`        | `string`                  | 输入框内容     |
-| `setInputValue`     | `(value: string) => void` | 设置输入框内容 |
-| `isLoading`         | `boolean`                 | 是否加载中     |
-| `handleSendMessage` | `() => void`              | 发送消息函数   |
+该 Hook 已被 ChatInterface 组件内部集成，通常不需要直接使用。如果需要自定义聊天逻辑，可以查看源代码实现。
 
 ### useCopyToClipboard
 
@@ -231,9 +204,9 @@ npm run type-check
 ```typescript
 interface Message {
   id: string;
+  role: "user" | "assistant";
   content: string;
-  isUser: boolean;
-  timestamp: Date;
+  [key: string]: any;
 }
 ```
 
