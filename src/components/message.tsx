@@ -177,7 +177,7 @@ const ChatMessage = memo(
 
         {/* 消息内容区域 */}
         <div
-          className={`lan-flex lan-flex-col lan-max-w-[85%] lan-sm:lan-max-w-[80%] ${
+          className={`lan-flex lan-flex-col lan-min-w-0 lan-max-w-[85%] lan-sm:lan-max-w-[80%] ${
             isUser ? "lan-items-end" : "lan-items-start"
           }`}
         >

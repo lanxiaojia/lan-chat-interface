@@ -43,6 +43,7 @@ const CodeBlock: FC<CodeBlockProps> = memo(({ language, value }) => {
           padding: "1rem",
           fontSize: "0.875rem",
           lineHeight: "1.5",
+          overflowX: "auto", // 🟢 Fix: 显式开启横向滚动
         }}
         codeTagProps={{
           style: {
