@@ -192,7 +192,7 @@ const ChatMessage = memo(
             ${
               isUser
                 ? "lan-bg-[#e7f0fe] lan-text-gray-900 lan-rounded-[20px] lan-rounded-tr-sm"
-                : "lan-bg-transparent lan-text-gray-800 lan--ml-2 lan-px-2"
+                : "lan-bg-transparent lan-text-gray-800 lan-pl-1"
             }`}
           >
             <div
